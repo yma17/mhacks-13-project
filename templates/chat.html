@@ -10,7 +10,12 @@
   </head>
 
   <body>
-    <div id="messages"></div>
+    <div id="messages">
+      {% for key, value in data.items() %}
+      <p>{{value.userId}}: {{value.message}}</p>
+      {% endfor %}
+
+    </div>
     <form onsubmit="sendMessage()" action="/chat" method="POST">
       <input id="userId" placeholder="Your ID" name="userId">
       <input id="message" placeholder="Message" name="message"/>

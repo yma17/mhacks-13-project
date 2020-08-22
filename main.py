@@ -12,6 +12,7 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
 # db.child("names").push({"name": "chloe"})
+# print(db.get().val())
 
 # Initialize Flask App
 app = Flask(__name__)
@@ -25,15 +26,15 @@ def hello():
 def test():
     return render_template("test.html")
 
-@app.route('/chat/', methods=['GET', 'POST'])
+@app.route('/chat', methods=['GET', 'POST'])
 def chat():
     if request.method == 'POST':
-        # print(db.child('messages').get().val())
-        # userId = request.form['userId']
+        userId = request.form['userId']
         message = request.form['message']
-        db.child("messages").push({"message": message})
+
+        db.child("messages").push({"message": message, "userId": userId})
         # db.child("rooms").push({'room1': {"user": userId, "message": message}})
-    return render_template('chat.html')
+    return render_template('chat.html', data=db.child('messages').get().val())
 
 @app.route('/profile/')
 def about():
