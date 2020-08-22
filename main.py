@@ -18,6 +18,10 @@ app = Flask(__name__)
 def hello():
     return "Hello World!"
 
+@app.route("/index")
+def explore():
+    return render_template('index.html')
+  
 @app.route('/profile/')
 def about():
     print(db.get())
