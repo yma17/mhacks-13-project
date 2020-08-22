@@ -1,9 +1,18 @@
-from firebase import firebase
+import pyrebase
 import random
 import pickle
 import csv
 
-firebase = firebase.FirebaseApplication("https://mhacks-13-project.firebaseio.com/")
+config = {
+	"apiKey": "AIzaSyAQk0A5csVTIUIEfvdXXiXaelEG3OWes9U",
+	"authDomain": "mhacks-13-project.firebaseapp.com",
+	"databaseURL": "https://mhacks-13-project.firebaseio.com",
+	"storageBucket": "mhacks-13-project.appspot.com"
+}
+
+firebase = pyrebase.initialize_app(config)
+
+db = firebase.database()
 
 # skills=['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing', 'Knitting', 'Photoshop', 'Photography',
 #         'Singing', 'Gardening', 'Meditation', 'Video Editing', 'Drawing', 'Painting', 'Reading’, ''English',
@@ -56,9 +65,12 @@ for uid in uids:
 	skills={}
 	interests={}
 	for k, v in skill_prob_dict.items():
-		if random.random() <= v:
+		r = random.random()
+		if r <= v:
 			i = random.choice(interest_dist)
 			interests[k] = i
 			skills[k] = random.randint(0, i - 1)
+		elif r >= 0.99:
+			skills[k] = 3
 
-	result = firebase.post("/users", {'uid':uid, 'Name':name, 'currency':currency, 'Interests':interests, 'Skills':skills})
+	db.child("users").child(str(uid)).set({'Name':name, 'currency':currency, 'Interests':interests, 'Skills':skills})
