@@ -21,7 +21,7 @@ def hello():
 @app.route('/profile/')
 def about():
     print(db.get())
-    return render_template('profile.html', data=db.get().val())
+    return render_template('profile.html', data=db.get())
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
