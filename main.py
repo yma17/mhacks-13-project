@@ -18,16 +18,13 @@ app = Flask(__name__)
 def hello():
     return "Hello World!"
 
-<<<<<<< HEAD
 @app.route("/chat")
 def chat():
     return render_template("chat.html")
-=======
 @app.route('/profile/')
 def about():
     print(db.get())
     return render_template('profile.html', data=db.get().val())
->>>>>>> master
 
 if __name__ == "__main__":
     app.run()
