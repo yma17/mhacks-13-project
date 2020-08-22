@@ -136,10 +136,30 @@
             </div>
             </nav>
             <div class="container-fluid">
-                <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                <div class="d-sm-flex justify-content-between align-items-center mb-4" id="parent">
                     <h3 class="text-dark mb-0">Explore</h3>
                 </div>
                 <div class="row">
+                    {% for key in users%}
+                    <div class="col-md-6 col-xl-3 mb-4">
+                        <div class="card shadow border-left-primary py-2">
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col"><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar4.jpeg"></div>
+                                    <div class="col mr-2">
+                                        {% for skill in users[key]["Skills"]%}
+                                        <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>{{skill}}</span></div>
+                                        {% endfor %}
+                                        <div class="text-dark font-weight-bold h5 mb-0"><span>{{users[key]["Name"]}}</span></div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-auto"><button class="btn btn-primary" type="button">Exchange</button></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
                     <div class="col-md-6 col-xl-3 mb-4">
                         <div class="card shadow border-left-primary py-2">
                             <div class="card-body">
@@ -147,7 +167,7 @@
                                     <div class="col"><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar4.jpeg"></div>
                                     <div class="col mr-2">
                                         <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Coding</span></div>
-                                        <div class="text-dark font-weight-bold h5 mb-0"><span>Eva</span></div>
+                                        <div class="text-dark font-weight-bold h5 mb-0" id="1"><span>{{data}}</span></div>
                                     </div>
                                     <div class="col-auto"><button class="btn btn-primary" type="button">Exchange</button></div>
                                 </div><span>I can teach beginner Java and Python.</span></div>

@@ -20,7 +20,7 @@ def hello():
 
 @app.route("/index")
 def explore():
-    return render_template('index.html')
+    return render_template('index.html',  users = db.child("users").get().val())
   
 @app.route('/profile/')
 def about():
