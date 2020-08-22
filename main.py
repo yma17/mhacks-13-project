@@ -80,22 +80,38 @@ def register():
             return render_template('register.html')
     return render_template('register.html', message=message)
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    # query to get correct user based on userID from session
-    all_users = db.child("users").get()
-    found_user = None
-    for user in all_users.each():
-        if (user.val()['uid'] == session['usrId']):
-            found_user = user
-    if (found_user == None): 
-        message = "Sorry, we are having issues finding your profile."
-        return render_template('login.html', message=message)
+    # check if session exists, if not redirect user to login page
+    try:
+        print(session['usr'])
 
-    data = {'user': found_user.val(),
-            'email': auth.get_account_info(session['usr'])['users'][0]['email'],
-            'picsrc': storage.child('cat.jpg').get_url('8w3Sb016P9Yu3S0cTarcId9jVkd2')}
-    return render_template('profile.html', **data)
+        # update profile form submission
+        if request.method == "POST":
+            return "HI"
+
+        # list of skills that can be added
+        skills = ['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing', 
+        'Knitting', 'Photoshop', 'Photography', 'Singing', 'Gardening', 
+        'Meditation', 'Video Editing', 'Drawing', 'Painting', 'Reading', 
+        'English', 'Spanish', 'Chinese', 'French','German', 'Japanese', 
+        'Korean', 'Hindu', 'Arabic', 'Malay', 'Italian', 'Portuguese']
+
+
+        # query to get correct user based on userID from session
+        user = db.child("users").child(session['usrId']).get()
+        if (user == None): 
+            message = "Sorry, we are having issues finding your profile."
+            return render_template('login.html', message=message)
+
+        data = {'user': user.val(),
+                'email': auth.get_account_info(session['usr'])['users'][0]['email'],
+                'allSkills' : skills,
+                'picsrc': storage.child('cat.jpg').get_url('8w3Sb016P9Yu3S0cTarcId9jVkd2')}
+        return render_template('profile.html', **data)
+    except KeyError:
+        return render_template('login.html')
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
