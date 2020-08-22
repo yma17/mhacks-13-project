@@ -10,7 +10,7 @@ def hello():
 def profile():
     return render_template('profile.html')
 
-@app.route("/explore")
+@app.route("/index")
 def explore():
     return render_template('index.html')
 
