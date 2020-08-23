@@ -11,17 +11,21 @@
 
   <body>
     <div id="messages">
-      {% for key, value in data.items() %}
-      <p>{{value.userId}}: {{value.message}}</p>
+      {% if messages != None %}
+      {% for obj in messages %}
+      {% if obj.user_id == users[0] %}
+      <p>{{obj.username}}: {{obj.message}}</p>
+      {% else %}
+      <p>{{obj.message}} :{{obj.username}}</p>
+      {% endif %}
       {% endfor %}
-
+      {% endif %}
     </div>
-    <form onsubmit="sendMessage()" action="/chat" method="POST">
-      <input id="userId" placeholder="Your ID" name="userId">
+    <form onsubmit="sendMessage()" action="/chat/{{room_id}}" method="POST">
+      <input id="user_id" placeholder="Your ID" name="user_id">
       <input id="message" placeholder="Message" name="message"/>
       <input type="submit" />
     </form>
-
      
     <script type=text/javascript src="{{ url_for('static', filename='chat/script.js') }}"></script>
     
