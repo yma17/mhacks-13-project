@@ -79,6 +79,31 @@
                       required=""
                     />
                   </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <label
+                      for="skill"
+                      style="margin-top: 0.5rem; margin-bottom: 0;"
+                      >Skill</label
+                    >
+                    <select class="form-control" name="skill" required>
+                      {% for skill in allSkills %}
+                      <option value="{{skill}}">{{skill}}</option>
+                      {% endfor %}</select
+                    >
+                  </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <label
+                      for="interest"
+                      style="margin-top: 0.5rem; margin-bottom: 0;"
+                    >
+                      Interest</label
+                    >
+                    <select class="form-control" name="interest" required>
+                      {% for skill in allSkills %}
+                      <option value="{{skill}}">{{skill}}</option>
+                      {% endfor %}</select
+                    >
+                  </div>
                 </div>
                 {{message}}
                 <button
