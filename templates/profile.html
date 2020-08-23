@@ -15,14 +15,23 @@
             height="160"
           />
           <div class="mb-3">
-            <button class="btn btn-primary btn-sm" type="button">
+            <input
+              id="photo-file"
+              type="file"
+              name="photo"
+              accept="image/x-png,image/gif,image/jpeg"
+            />
+            <button
+              class="btn btn-primary btn-sm"
+              type="button"
+              onclick="updatePhoto()"
+            >
               Change Photo
             </button>
-            {{uid}}
           </div>
         </div>
       </div>
-      <div class="card shadow mb-4">
+      <!-- <div class="card shadow mb-4">
         <div class="card-header py-3">
           <h6 class="text-primary font-weight-bold m-0">Projects</h6>
         </div>
@@ -98,7 +107,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="col-lg-8">
       <div class="row mb-3 d-none">
@@ -158,6 +167,20 @@
                   </div>
                   <div class="col">
                     <div class="form-group">
+                      <label for="currency"><strong>Currency</strong></label
+                      ><input
+                        disabled
+                        class="form-control"
+                        type="text"
+                        placeholder="{{user.currency}}"
+                        name="currency"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col">
+                    <div class="form-group">
                       <label for="email"><strong>Email Address</strong></label
                       ><input
                         disabled
@@ -172,99 +195,101 @@
               </form>
             </div>
           </div>
+          {{test}}
           <div class="card shadow">
             <div class="card-header py-3">
               <p class="text-primary m-0 font-weight-bold">Skill Settings</p>
             </div>
             <div class="card-body">
               <h5>Skills</h5>
-              <form action="/profile" method="post">
-                <div class="skills-div">
-                  {% for key, val in user['Skills'].items() %}
+              <div class="skills-div">
+                {% for key, val in user['Skills'].items() %}
+                <div
+                  class="form-row d-xl-flex justify-content-xl-center skill"
+                  style="margin: 5px 0;"
+                >
                   <div
-                    class="form-row d-xl-flex justify-content-xl-center"
-                    style="margin: 5px 0;"
+                    class="col-6 offset-2 text-left d-flex flex-row justify-content-xl-end"
                   >
-                    <div
-                      class="col-6 offset-2 text-left d-flex flex-row justify-content-xl-end skill"
+                    <select class="form-control s-name" name="s-name"
+                      ><option value="{{key}}" selected>{{key}}</option>
+                      {% for skill in allSkills if skill != key %}
+                      <option value="{{skill}}">{{skill}}</option>
+                      {% endfor %}</select
                     >
-                      <select disabled class="form-control" name="skill"
-                        ><option value="{{key}}" selected
-                          >{{key}}</option
-                        ></select
-                      >
-                    </div>
-                    <div class="col">
-                      <input
-                        disabled
-                        name="skillLevel"
-                        value="{{val}}"
-                        class="form-control d-xl-flex justify-content-xl-center skillLevel"
-                        type="number"
-                        style="width: 50%;"
-                      />
-                    </div>
                   </div>
-                  {% endfor %}
-                </div>
-                <div class="form-row d-xl-flex justify-content-xl-center">
-                  <div class="col d-xl-flex justify-content-xl-center">
-                    <button
-                      id="skill-btn"
-                      class="btn btn-primary border-success"
-                      type="button"
-                      style="margin: 10px; background-color: rgb(28, 200, 138);"
-                      data-toggle="modal"
-                      data-target="#skillModal"
-                    >
-                      Add Skill
-                    </button>
+                  <div class="col">
+                    <input
+                      name="s-level"
+                      value="{{val}}"
+                      class="form-control d-xl-flex justify-content-xl-center s-level"
+                      type="number"
+                      style="width: 50%;"
+                    />
                   </div>
                 </div>
-                <h5>Interests</h5>
-                <div class="interests-div">
-                  {% for key, val in user['Interests'].items() %}
+                {% endfor %}
+              </div>
+              <div class="form-row d-xl-flex justify-content-xl-center">
+                <div class="col d-xl-flex justify-content-xl-center">
+                  <button
+                    id="skill-btn"
+                    class="btn btn-primary border-success"
+                    type="button"
+                    style="margin: 10px; background-color: rgb(28, 200, 138);"
+                    data-toggle="modal"
+                    data-target="#skillModal"
+                  >
+                    Add Skill
+                  </button>
+                </div>
+              </div>
+              <h5>Interests</h5>
+              <div class="interests-div">
+                {% for key, val in user['Interests'].items() %}
+                <div
+                  class="form-row d-xl-flex justify-content-xl-center interest"
+                  style="margin: 5px 0;"
+                >
                   <div
-                    class="form-row d-xl-flex justify-content-xl-center"
-                    style="margin: 5px 0;"
+                    class="col-6 offset-2 text-left d-flex flex-row justify-content-xl-end"
                   >
-                    <div
-                      class="col-6 offset-2 text-left d-flex flex-row justify-content-xl-end"
+                    <select class="form-control i-name" name="i-name">
+                      <option value="{{key}}" selected>{{key}}</option>
+                      {% for skill in allSkills if skill != key %}
+                      <option value="{{skill}}">{{skill}}</option>
+                      {% endfor %}</select
                     >
-                      <select disabled class="form-control" name="interest"
-                        ><option value="{{key}}" selected
-                          >{{key}}</option
-                        ></select
-                      >
-                    </div>
-                    <div class="col">
-                      <input
-                        disabled
-                        name="interestLevel"
-                        value="{{val}}"
-                        class="form-control d-xl-flex justify-content-xl-center"
-                        type="number"
-                        style="width: 50%;"
-                      />
-                    </div>
                   </div>
-                  {% endfor %}
-                </div>
-                <div class="form-row d-xl-flex justify-content-xl-center">
-                  <div class="col d-xl-flex justify-content-xl-center">
-                    <button
-                      id="interest-btn"
-                      class="btn btn-primary border-success"
-                      type="button"
-                      style="margin: 10px; background-color: rgb(28, 200, 138);"
-                      data-toggle="modal"
-                      data-target="#interestModal"
-                    >
-                      Add Interest
-                    </button>
+                  <div class="col">
+                    <input
+                      name="i-level"
+                      value="{{val}}"
+                      class="form-control d-xl-flex justify-content-xl-center i-level"
+                      type="number"
+                      style="width: 50%;"
+                    />
                   </div>
                 </div>
-              </form>
+                {% endfor %}
+              </div>
+              <div class="form-row d-xl-flex justify-content-xl-center">
+                <div class="col d-xl-flex justify-content-xl-center">
+                  <button
+                    id="interest-btn"
+                    class="btn btn-primary border-success"
+                    type="button"
+                    style="margin: 10px; background-color: rgb(28, 200, 138);"
+                    data-toggle="modal"
+                    data-target="#interestModal"
+                  >
+                    Add Interest
+                  </button>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="updateProfile()">
+                Save&nbsp;Settings
+              </button>
             </div>
           </div>
         </div>
@@ -274,177 +299,96 @@
   <div class="card shadow mb-5"></div>
 </div>
 
-<!-- Modal for skill-->
-<div
-  class="modal fade"
-  id="skillModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="skillModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form action="/updateSkill" method="post">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Skill</h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div
-            class="form-row d-xl-flex justify-content-xl-center"
-            style="margin: 5px 0;"
-          >
-            <div
-              class="col-6 offset-2 text-left d-flex flex-row justify-content-xl-end"
-            >
-              <select class="form-control" name="interest"
-                >{% for skill in allSkills %}<option value="{{skill}}"
-                  >{{skill}}</option
-                >
-                {% endfor %}</select
-              >
-            </div>
-            <div class="col">
-              <input
-                name="interestLevel"
-                value="{{val}}"
-                class="form-control d-xl-flex justify-content-xl-center"
-                type="number"
-                style="width: 50%;"
-                min="0"
-                max="3"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-          </button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Modal for interest-->
-<div
-  class="modal fade"
-  id="interestModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="interestModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form action="/updateInterest" method="post">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Interest</h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div
-            class="form-row d-xl-flex justify-content-xl-center"
-            style="margin: 5px 0;"
-          >
-            <div
-              class="col-6 offset-2 text-left d-flex flex-row justify-content-xl-end"
-            >
-              <select class="form-control" name="interest"
-                >{% for skill in allSkills %}<option value="{{skill}}"
-                  >{{skill}}</option
-                >
-                {% endfor %}</select
-              >
-            </div>
-            <div class="col">
-              <input
-                name="interestLevel"
-                value="{{val}}"
-                class="form-control d-xl-flex justify-content-xl-center"
-                type="number"
-                style="width: 50%;"
-                min="0"
-                max="3"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-          </button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- <script
+<script
   src="https://code.jquery.com/jquery-3.5.1.min.js"
   integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
   crossorigin="anonymous"
 ></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
   $(document).ready(function () {
     $("#skill-btn").click(function () {
       $(".skills-div").append(
-        "<div class='form-row d-xl-flex justify-content-xl-center' " +
+        "<div class='form-row d-xl-flex justify-content-xl-center skill' " +
           "style='margin: 5px 0;'><div class='col-6 offset-2 text-left d-flex flex-row justify-content-xl-end'> " +
-          "<select class='form-control skill' name='skill'> " +
+          "<select class='form-control s-name' name='s-name'> " +
           "{% for skill in allSkills %}<option value='{{skill}}'>{{skill}}</option> {% endfor %} " +
           "</select></div><div class='col'><input " +
-          "class='form-control d-xl-flex justify-content-xl-center skillLevel' " +
-          "name='skillLevel' type='number' min='0' max='3' style='width: 50%;' />" +
+          "class='form-control d-xl-flex justify-content-xl-center s-level' " +
+          "name='s-level' type='number' min='0' max='3' style='width: 50%;' />" +
           "</div></div>"
       );
     });
 
     $("#interest-btn").click(function () {
       $(".interests-div").append(
-        "<div class='form-row d-xl-flex justify-content-xl-center' " +
+        "<div class='form-row d-xl-flex justify-content-xl-center interest' " +
           "style='margin: 5px 0;'><div class='col-6 offset-2 text-left d-flex flex-row justify-content-xl-end'> " +
-          "<select class='form-control interest' name='interest'> " +
+          "<select class='form-control i-name' name='i-name'> " +
           "{% for skill in allSkills %}<option value='{{skill}}'>{{skill}}</option> {% endfor %} " +
           "</select></div><div class='col'><input " +
-          "class='form-control d-xl-flex justify-content-xl-center interestLevel' " +
-          "name='interestLevel' type='number' min='0' max='3' style='width: 50%;' />" +
+          "class='form-control d-xl-flex justify-content-xl-center i-level' " +
+          "name='i-level' type='number' min='0' max='3' style='width: 50%;' />" +
           "</div></div>"
       );
     });
-
-    $("#submit-btn").click(function () {
-      var skillsDict;
-      $(".skill").each(function (i, obj) {
-        console.log(obj.val());
-      });
-
-      var serviceid = document.getElementById("field").value;
-      $.post("/serviceidlookup", { serviceid: serviceid }).done(function (
-        reply
-      ) {
-        $("#reply").empty().append(reply);
-      });
-    });
   });
-</script> -->
+
+  // Save changes button clicked
+  function updateProfile() {
+    var skillsDict = {};
+    var interestsDict = {};
+    $(".skill").each(function (i) {
+      var name = $(this).find(".s-name").val();
+      var level = $(this).find(".s-level").val();
+      skillsDict[name] = parseInt(level);
+    });
+    $(".interest").each(function (i) {
+      var name = $(this).find(".i-name").val();
+      var level = $(this).find(".i-level").val();
+      interestsDict[name] = parseInt(level);
+    });
+
+    var data = {};
+    data["Skills"] = skillsDict;
+    data["Interests"] = interestsDict;
+
+    $.ajax({
+      url: "/profile", // url where to submit the request
+      type: "POST", // type of action POST || GET
+      contentType: "application/json",
+      data: JSON.stringify(data), // post data || get data
+      success: function (result) {
+        Swal.fire("Success", "Profile updated", "success");
+      },
+      error: function (xhr, resp, text) {
+        console.log(xhr, resp, text);
+        Swal.fire("Error", "Profile not updated", "error");
+      },
+    });
+  }
+
+  // Update photo button clicked
+  function updatePhoto() {
+    var file_data = $("#photo-file").prop("files")[0];
+    var form_data = new FormData();
+    form_data.append("file", file_data);
+    $.ajax({
+      url: "/updatePhoto",
+      cache: false,
+      contentType: false,
+      processData: false,
+      data: form_data,
+      type: "post",
+      success: function (response) {
+        console.log("YAY");
+      },
+      error: function (response) {
+        console.log("NAY");
+      },
+    });
+  }
+</script>
 
 {% endblock %}

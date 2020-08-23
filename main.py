@@ -20,34 +20,19 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 @app.route("/")
+def home():
+    return render_template('home.html')
+
+@app.route("/index")
 def index():
     # check if session exists, if not redirect user to login page
     try:
         print(session['usr'])
-        return render_template("index.html", uid= session['usrId'])
+        data = {'users': db.child("users").get().val(),
+                'uid': session['usrId']}
+        return render_template('index.html', **data)
     except KeyError:
-        return render_template('login.html')
-
-@app.route("/home")
-def home():
-    return render_template('home.html')
-
-@app.route("/login")
-def login():
-    return render_template('login.html')
-
-@app.route("/register")
-def register():
-    return render_template('register.html')
-
-@app.route("/index")
-def index2():
-    # check if session exists, if not redirect user to login page
-    try:
-        print(session['usr'])
-        return render_template("index.html", uid= session['usrId'])
-    except KeyError:
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -55,7 +40,7 @@ def login():
     # if session exists, redirect to index page
     try:
         print(session['usr'])
-        return render_template("index.html", uid= session['usrId'])
+        return redirect(url_for('index'))
     # session does not exist
     except KeyError:
         # login form submission
@@ -67,7 +52,8 @@ def login():
                 user = auth.refresh(user['refreshToken'])
                 session['usr'] = user['idToken']
                 session['usrId'] = auth.get_account_info(session['usr'])['users'][0]['localId']
-                return render_template("index.html", uid=session['usrId'])
+                # redirect to index page
+                return redirect(url_for('index'))
             # if login unsuccessful, return to login page
             except:
                 message = "Incorrect Password!"
@@ -85,18 +71,31 @@ def register():
             user = auth.refresh(user['refreshToken'])
             session['usr'] = user['idToken']
             session['usrId'] = auth.get_account_info(session['usr'])['users'][0]['localId']
-            return render_template('profile.html', uid=user)
+            # put default profile pic
+            filePath = "profilepic/" + session['usrId']
+            storage.child(filePath).put("/static/assets/img/default.jpg", session['usr'])
+            return redirect(url_for('profile'))
         # if registration unsuccessful, return to registration page
         except:
             message = "Unable to register. Please try again"
             return render_template('register.html')
     return render_template('register.html', message=message)
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
     # check if session exists, if not redirect user to login page
     try:
         print(session['usr'])
+
+        if request.method == 'POST':
+            data = request.get_json()
+            skills = data['Skills']
+            interests = data['Interests']
+            # update profile
+            user = db.child("users").child(session['usrId']).child("Skills").set(skills)
+            user = db.child("users").child(session['usrId']).child("Interests").set(interests)
+        
+
         # list of skills that can be added
         skills = ['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing', 
         'Knitting', 'Photoshop', 'Photography', 'Singing', 'Gardening', 
@@ -107,35 +106,28 @@ def profile():
 
         # query to get correct user based on userID from session
         user = db.child("users").child(session['usrId']).get()
-        if (user == None): 
-            message = "Sorry, we are having issues finding your profile."
-            return render_template('login.html', message=message)
+        filePath = "profilepic/" + session['usrId']
 
         data = {'user': user.val(),
                 'email': auth.get_account_info(session['usr'])['users'][0]['email'],
                 'allSkills' : skills,
-                'picsrc': storage.child('cat.jpg').get_url('8w3Sb016P9Yu3S0cTarcId9jVkd2')}
+                'picsrc': storage.child(filePath).get_url(session['usr'])}
         return render_template('profile.html', **data)
     except KeyError:
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
-#Update profile (interest and skills)
-@app.route('/updateInterest', methods=['GET', 'POST'])
-def updateInterest():
-    if request.method != 'POST':
-        interest = request.form['interest']
-        interestLevel = request.form['interestLevel']
-        data = {interest: interestLevel}
-        db.child("users").child(session['usrId']).child("Interests").push(data)
-    return redirect(url_for('profile'))
+# If want to know about other people's profiles
+@app.route('/otherProfile/')
+def otherProfile():
+    return render_template('otherProfile.html', users = db.child("users").get().val())
 
-@app.route('/updateSkill', methods=['GET', 'POST'])
-def updateSkill():
-    if request.method != 'POST':
-        skill = request.form['skill']
-        skillLevel = request.form['skillLevel']
-        data = {skill: skillLevel}
-        db.child("users").child(session['usrId']).child("Skills").push(data)
+# Upload/change profile picture
+@app.route('/updatePhoto', methods=['GET', 'POST'])
+def updatePhoto():
+    if request.method == 'POST':
+        file = request.files['file']
+        filePath = "profilepic/" + session['usrId']
+        storage.child(filePath).put(file, session['usr'])
     return redirect(url_for('profile'))
 
 if __name__ == "__main__":
