@@ -15,6 +15,13 @@ auth = firebase.auth()
 db = firebase.database()
 storage = firebase.storage()
 
+# list of skills that can be added
+SKILLS = ['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing', 
+'Knitting', 'Photoshop', 'Photography', 'Singing', 'Gardening', 
+'Meditation', 'Video Editing', 'Drawing', 'Painting', 'Reading', 
+'English', 'Spanish', 'Chinese', 'French','German', 'Japanese', 
+'Korean', 'Hindu', 'Arabic', 'Malay', 'Italian', 'Portuguese']
+
 # Initialize Flask App
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -64,22 +71,36 @@ def register():
     message = ""
     # register form submission
     if request.method == 'POST':
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        skill = request.form['skill']
+        interest = request.form['interest']
         try:
+            # create entry in auth table
             user = auth.create_user_with_email_and_password(email, password)
             user = auth.refresh(user['refreshToken'])
             session['usr'] = user['idToken']
             session['usrId'] = auth.get_account_info(session['usr'])['users'][0]['localId']
+
+            # create entry in realtime database
+            # Set interests, Name, Skills, currency
+            newData = { 'Interests': {interest: 0}, 
+                        'Name': username,
+                        'Skills': {skill: 0},
+                        'currency': 5}
+            db.child("users").child(session['usrId']).set(newData)
+            
             # put default profile pic
             filePath = "profilepic/" + session['usrId']
-            storage.child(filePath).put("/static/assets/img/default.jpg", session['usr'])
+            storage.child(filePath).put("default.jpg", user['idToken'])
             return redirect(url_for('profile'))
         # if registration unsuccessful, return to registration page
         except:
             message = "Unable to register. Please try again"
-            return render_template('register.html')
-    return render_template('register.html', message=message)
+    data= {'message': message,
+            'allSkills': SKILLS}
+    return render_template('register.html', **data)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -94,15 +115,6 @@ def profile():
             # update profile
             user = db.child("users").child(session['usrId']).child("Skills").set(skills)
             user = db.child("users").child(session['usrId']).child("Interests").set(interests)
-        
-
-        # list of skills that can be added
-        skills = ['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing', 
-        'Knitting', 'Photoshop', 'Photography', 'Singing', 'Gardening', 
-        'Meditation', 'Video Editing', 'Drawing', 'Painting', 'Reading', 
-        'English', 'Spanish', 'Chinese', 'French','German', 'Japanese', 
-        'Korean', 'Hindu', 'Arabic', 'Malay', 'Italian', 'Portuguese']
-
 
         # query to get correct user based on userID from session
         user = db.child("users").child(session['usrId']).get()
@@ -110,7 +122,7 @@ def profile():
 
         data = {'user': user.val(),
                 'email': auth.get_account_info(session['usr'])['users'][0]['email'],
-                'allSkills' : skills,
+                'allSkills' : SKILLS,
                 'picsrc': storage.child(filePath).get_url(session['usr'])}
         return render_template('profile.html', **data)
     except KeyError:
