@@ -10,10 +10,13 @@
   </head>
 
   <body>
+    <div>
+      <p>{{chat_name}}</p>
+    </div>
     <div id="messages">
       {% if messages != None %}
       {% for obj in messages %}
-      {% if obj.user_id == users[0] %}
+      {% if obj.user_id != current_user %}
       <p>{{obj.username}}: {{obj.message}}</p>
       {% else %}
       <p>{{obj.message}} :{{obj.username}}</p>
@@ -21,8 +24,8 @@
       {% endfor %}
       {% endif %}
     </div>
-    <form onsubmit="sendMessage()" action="/chat/{{room_id}}" method="POST">
-      <input id="user_id" placeholder="Your ID" name="user_id">
+    <form autocomplete="off" onsubmit="sendMessage()" action="/chat/{{room_id}}" method="POST">
+      <input id="user_id" type="hidden" name="user_id" value="{{current_user}}">
       <input id="message" placeholder="Message" name="message"/>
       <input type="submit" />
     </form>

@@ -399,22 +399,22 @@
                 <div class="card shadow mb-4">
                   <div class="card-header py-3">
                     <h6 class="text-primary font-weight-bold m-0">
-                      Search User
+                      Search Chat
                     </h6>
                   </div>
                   <ul class="list-group list-group-flush">
                     {% for i in range(rooms|length) %}
                     <li class="list-group-item" style="cursor: pointer;">
-                      <a style="text-decoration: none;" href="/chat/{{i+2}}">
+                      <a style="text-decoration: none;" href="/chat/{{i}}">
                         <div class="row align-items-center no-gutters">
                           <div class="col-xl-12 mr-2">
-                            <h6 class="mb-0 pointer">
-                              <strong>{{rooms[i]}}</strong>
+                            <h6 style = "text-transform:uppercase;" class="mb-0 pointer">
+                              <strong>{{ rooms[i].usernames[0] }} / {{ rooms[i].usernames[1] }}</strong>
                             </h6>
+                            {% if rooms[i].messages is defined %}
                             <span class="text-xs"
-                              >{{rooms[i].messages[(rooms[i].messages|length)
-                              -1].message}}</span
-                            >
+                              >{{ rooms[i].messages[(rooms[i].messages|length)-1].message }}</span>
+                            {% endif %}
                           </div>
                         </div>
                       </a>
