@@ -128,13 +128,10 @@ def chat(room_id):
         messages = db.child(f"rooms/{room_id}/messages").get().val()
         users = db.child(f"rooms/{room_id}/users").get().val()
         my_name = db.child(f"users/{session['usrId']}/Name").get().val()
-        print(room_id)
         
         chat_name = db.child(f"rooms/{room_id}/usernames").get().val()
-        print(db.child(f"rooms/{room_id}/usernames").get().val())
         chat_name.remove(my_name)
         chat_name = chat_name[0]
-        print("chat name", chat_name)
 
         if request.method == 'POST':
             user_id = request.form['user_id']
