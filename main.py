@@ -31,6 +31,10 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 def readRecFromCsv():
+    # download uid.csv and lt_matrix.csv from firebase storage
+    storage.child("uid.csv").download("uid.csv")
+    storage.child("lt_matrix.csv").download("lt_matrix.csv")
+
     # read all user ids first
     with open('uid.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
@@ -39,7 +43,7 @@ def readRecFromCsv():
             id_list.append(i)
 
     # get specific index of current user, to get row of predictions
-    idx = id_list.index("zxcZAXnIA0dDNYQKvSx81AcTXIg2")
+    idx = id_list.index(session['usrId'])
 
     with open('lt_matrix.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
@@ -49,7 +53,7 @@ def readRecFromCsv():
             # exclude current user
             if (i == idx):
                 continue
-            pred[id_list[i]] = val
+            pred[id_list[i]] = float(val)
         
     return pred
 
@@ -70,7 +74,7 @@ def index():
         # receive the list of uids then sort
         uidDict = readRecFromCsv()
         #sorted_teachers = {k: v for k, v in sorted(uidDict.items(), key=lambda x: x[1])}
-        sorted_teachers = dict(sorted(uidDict.items(), key=operator.itemgetter(1),reverse=True))
+        sorted_teachers = dict(sorted(uidDict.items(), key=operator.itemgetter(1), reverse=True))
         filePath = "profilepic/" + session['usrId']
         url = storage.child(filePath).get_url(session['usrId'])
 
