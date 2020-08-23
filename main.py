@@ -2,7 +2,9 @@ import os
 import pyrebase
 
 from flask import Flask, render_template, session, request, redirect, url_for
-
+from urllib.parse import urlparse
+import urllib.request
+import operator
 config = {
   "apiKey": "AIzaSyAQk0A5csVTIUIEfvdXXiXaelEG3OWes9U",
   "authDomain": "mhacks-13-project.firebaseapp.com",
@@ -38,7 +40,19 @@ def index():
         print(session['usr'])
         data = {'users': db.child("users").get().val(),
                 'uid': session['usrId']}
-        return render_template('index.html', **data)
+        # receive the list of uids then sort
+        uidDict = {'0EeM4SlVTeNEkzx2r6dziAirPBO2': '0', '0GZkZYJfJZNI0r7gieDq4v9Zmeo1': '1', '0g6DIZAxYbejOSQsn0U0FYcpl3I3': '0.5', '0hxF9MYWbjfbp9cVN0dOi8mmVkj1': '1'}
+        #sorted_teachers = {k: v for k, v in sorted(uidDict.items(), key=lambda x: x[1])}
+        sorted_teachers = dict(sorted(uidDict.items(), key=operator.itemgetter(1),reverse=True))
+        filePath = "profilepic/" + session['usrId']
+        url = storage.child(filePath).get_url(session['usrId'])
+
+        response = urllib.request.urlopen(url)
+        if response.code not in range(200, 209):
+            url = urlparse(
+                'https://firebasestorage.googleapis.com/v0/b/mhacks-13-project.appspot.com/o/profilepic%2FeyJhbGciOiJSUzI1NiIsImtpZCI6IjEyODA5ZGQyMzlkMjRiZDM3OWMwYWQxOTFmOGIwZWRjZGI5ZDM5MTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbWhhY2tzLTEzLXByb2plY3QiLCJhdWQiOiJtaGFja3MtMTMtcHJvamVjdCIsImF1dGhfdGltZSI6MTU5ODE1NjUxMCwidXNlcl9pZCI6IklGbHQwYkVJR01YNWwxblhWSzV4b1lyNmViZjEiLCJzdWIiOiJJRmx0MGJFSUdNWDVsMW5YVks1eG9ZcjZlYmYxIiwiaWF0IjoxNTk4MTU2NTEwLCJleHAiOjE1OTgxNjAxMTAsImVtYWlsIjoic2lt'
+            )
+        return render_template('index.html', **data, teachers = sorted_teachers, url = url)
     except KeyError:
         return redirect(url_for('login'))
 
@@ -135,11 +149,25 @@ def otherProfile():
     userId = request.args.get('userId')
     users = db.child("users").get().val()
     user = users[userId]
-    skills = users[userId]["Skills"]
-    interests = users[userId]["Interests"]
+    skills = dict()
+    interests = dict()
+    if "Skills" in users[userId]:
+        skills = users[userId]["Skills"]
+    if "Interests" in users[userId]:
+        interests = users[userId]["Interests"]
     sorted_interests = {k: v for k, v in sorted(interests.items(), key=lambda x: x[1])}
     sorted_skills = {k: v for k, v in sorted(skills.items(), key=lambda x: x[1])}
-    return render_template('otherProfile.html', user = user, skills = sorted_skills, interests = sorted_interests)
+    
+    filePath = "profilepic/" + session['usrId']
+    url = storage.child(filePath).get_url(session['usrId'])
+    
+    
+    response = urllib.request.urlopen(url)
+    if response.code not in range(200, 209):
+        url = urlparse(
+            'https://firebasestorage.googleapis.com/v0/b/mhacks-13-project.appspot.com/o/profilepic%2FeyJhbGciOiJSUzI1NiIsImtpZCI6IjEyODA5ZGQyMzlkMjRiZDM3OWMwYWQxOTFmOGIwZWRjZGI5ZDM5MTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbWhhY2tzLTEzLXByb2plY3QiLCJhdWQiOiJtaGFja3MtMTMtcHJvamVjdCIsImF1dGhfdGltZSI6MTU5ODE1NjUxMCwidXNlcl9pZCI6IklGbHQwYkVJR01YNWwxblhWSzV4b1lyNmViZjEiLCJzdWIiOiJJRmx0MGJFSUdNWDVsMW5YVks1eG9ZcjZlYmYxIiwiaWF0IjoxNTk4MTU2NTEwLCJleHAiOjE1OTgxNjAxMTAsImVtYWlsIjoic2lt'
+        )
+    return render_template('otherProfile.html', user = user, skills = sorted_skills, interests = sorted_interests, url = url)
 
 # Upload/change profile picture
 @app.route('/updatePhoto', methods=['GET', 'POST'])
