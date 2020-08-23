@@ -69,17 +69,10 @@ def index():
         for teacher in sorted_teachers:
             filePath = "profilepic/" + teacher
             url = storage.child(filePath).get_url(teacher)
-            try:
-                response = urllib.request.urlopen(url)
-            except:
-                url = storage.child("profilepic/default.jpg").get_url(session['usr'])
-            pictureDict.update({teacher: url})
         filePath = 'profilepic/' + session['usrId']
+        
         profilePicture = storage.child(filePath).get_url(session['usrId'])
-        try:
-            response = urllib.request.urlopen(url)
-        except:
-            url = storage.child("profilepic/default.jpg").get_url(session['usr'])
+
         data = {'users': db.child("users").get().val(),
                 'uid': session['usrId'],
                 'pictures': pictureDict,
