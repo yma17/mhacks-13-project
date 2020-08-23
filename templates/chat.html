@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='chat/style.css')}}"
+    />
+  </head>
+
+  <body>
+    <div>
+      <p>{{chat_name}}</p>
+    </div>
+    <div id="messages">
+      {% if messages != None %}
+      {% for obj in messages %}
+      {% if obj.user_id != current_user %}
+      <p>{{obj.username}}: {{obj.message}}</p>
+      {% else %}
+      <p>{{obj.message}} :{{obj.username}}</p>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+    </div>
+    <form autocomplete="off" onsubmit="sendMessage()" action="/chat/{{room_id}}" method="POST">
+      <input id="user_id" type="hidden" name="user_id" value="{{current_user}}">
+      <input id="message" placeholder="Message" name="message"/>
+      <input type="submit" />
+    </form>
+     
+    <script type=text/javascript src="{{ url_for('static', filename='chat/script.js') }}"></script>
+    
+  </body>
+</html>
