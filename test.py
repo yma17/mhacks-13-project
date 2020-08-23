@@ -1,4 +1,18 @@
 import csv
+import pyrebase
+
+config = {
+  "apiKey": "AIzaSyAQk0A5csVTIUIEfvdXXiXaelEG3OWes9U",
+  "authDomain": "mhacks-13-project.firebaseapp.com",
+  "databaseURL": "https://mhacks-13-project.firebaseio.com",
+  "storageBucket": "mhacks-13-project.appspot.com",
+  "serviceAccount": "key.json"
+}
+
+firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
+db = firebase.database()
+storage = firebase.storage()
 
 def readRecFromCsv():
     # read all user ids first
@@ -23,5 +37,7 @@ def readRecFromCsv():
         
     return pred
 
-
-readRecFromCsv()
+# only ran once to setup photos
+def uploadPhotos():
+    filePath = 'profilepic/' + session['usrId']
+    storage.child(filePath).put(file, session['usr'])

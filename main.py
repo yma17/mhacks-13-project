@@ -1,11 +1,12 @@
 import os
 import csv
+import time
 import pyrebase
-
 from flask import Flask, render_template, session, request, redirect, url_for
 from urllib.parse import urlparse
 import urllib.request
 import operator
+
 config = {
   "apiKey": "AIzaSyAQk0A5csVTIUIEfvdXXiXaelEG3OWes9U",
   "authDomain": "mhacks-13-project.firebaseapp.com",
@@ -28,11 +29,25 @@ def readRecFromCsv():
     with open('uid.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         id_list = []
+        count = 0
         for i in next(csv_reader):
             id_list.append(i)
+            # run once to fill with profile pictures for each user id
+            # if count >= 450 and count < 550:
+            #     print(count)
+            #     curr = (count % 5) + 1
+            #     filePath = 'profilepic/' + i
+            #     srcPath = "static/assets/img/avatars/avatar" + str(curr) + ".jpeg"
+            #     storage.child(filePath).put(srcPath, session['usr'])
+            # count = count + 1
+
 
     # get specific index of current user, to get row of predictions
-    idx = id_list.index("zxcZAXnIA0dDNYQKvSx81AcTXIg2")
+    try:
+        idx = id_list.index(session['usrId'])
+    except:
+        # can't find user in list, default to first entry
+        idx = 0
 
     with open('lt_matrix.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
@@ -55,6 +70,9 @@ def index():
     # check if session exists, if not redirect user to login page
     try:
         print(session['usr'])
+        # user has been logged out
+        if(session['usr'] == None):
+            return redirect(url_for('login'))
 
         # get dictionary of predictions (excluding current user)
         pred = readRecFromCsv()
@@ -65,17 +83,12 @@ def index():
         #sorted_teachers = {k: v for k, v in sorted(uidDict.items(), key=lambda x: x[1])}
 
         sorted_teachers = dict(sorted(uidDict.items(), key=operator.itemgetter(1),reverse=True))
-        pictureDict = dict()
-        for teacher in sorted_teachers:
-            filePath = "profilepic/" + teacher
-            url = storage.child(filePath).get_url(teacher)
-        filePath = 'profilepic/' + session['usrId']
-        
+
+        filePath = 'profilepic/' + session['usrId']        
         profilePicture = storage.child(filePath).get_url(session['usrId'])
 
         data = {'users': db.child("users").get().val(),
                 'uid': session['usrId'],
-                'pictures': pictureDict,
                 'profilePicture': profilePicture}
         return render_template('index.html', **data, teachers = sorted_teachers)
     except KeyError:
@@ -87,6 +100,9 @@ def login():
     # if session exists, redirect to index page
     try:
         print(session['usr'])
+        # user has been logged out
+        if(session['usr'] == None):
+            return render_template("login.html", message=message)
         return redirect(url_for('index'))
     # session does not exist
     except KeyError:
@@ -104,7 +120,7 @@ def login():
             # if login unsuccessful, return to login page
             except:
                 message = "Incorrect Password!"
-        return render_template("login.html", message=message)
+    return render_template("login.html", message=message)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -133,6 +149,9 @@ def profile():
     # check if session exists, if not redirect user to login page
     try:
         print(session['usr'])
+        # user has been logged out
+        if(session['usr'] == None):
+            return redirect(url_for('login'))
 
         if request.method == 'POST':
             data = request.get_json()
@@ -175,35 +194,45 @@ def profile():
 # If want to know about other people's profiles
 @app.route('/otherProfile/')
 def otherProfile():
-    userId = request.args.get('userId')
-    users = db.child("users").get().val()
-    data = {'users': db.child("users").get().val(),
-                'uid': session['usrId']}
-    user = users[userId]
-    skills = dict()
-    interests = dict()
-    if "Skills" in users[userId]:
-        skills = users[userId]["Skills"]
-    if "Interests" in users[userId]:
-        interests = users[userId]["Interests"]
-    sorted_interests = {k: v for k, v in sorted(interests.items(), key=lambda x: x[1])}
-    sorted_skills = {k: v for k, v in sorted(skills.items(), key=lambda x: x[1])}
-    
-    filePath = "profilepic/" + userId
-    url = storage.child(filePath).get_url(userId)
     try:
-        response = urllib.request.urlopen(url)
-    except:
-        url = storage.child("profilepic/default.jpg").get_url(session['usr'])
+        print(session['usr'])
+        # user has been logged out
+        if(session['usr'] == None):
+            return redirect(url_for('login'))
 
-    filePath = 'profilepic/' + session['usrId']
-    profilePicture = storage.child(filePath).get_url(session['usrId'])
-    try:
-        response = urllib.request.urlopen(url)
-    except:
-        url = storage.child("profilepic/default.jpg").get_url(session['usr'])
+        userId = request.args.get('userId')
+        users = db.child("users").get().val()
+        data = {'users': db.child("users").get().val(),
+                    'uid': session['usrId']}
+        user = users[userId]
+        skills = dict()
+        interests = dict()
+        if "Skills" in users[userId]:
+            skills = users[userId]["Skills"]
+        if "Interests" in users[userId]:
+            interests = users[userId]["Interests"]
+        sorted_interests = {k: v for k, v in sorted(interests.items(), key=lambda x: x[1])}
+        sorted_skills = {k: v for k, v in sorted(skills.items(), key=lambda x: x[1])}
+        
+        filePath = "profilepic/" + userId
+        url = storage.child(filePath).get_url(userId)
+        try:
+            response = urllib.request.urlopen(url)
+        except:
+            url = storage.child("profilepic/default.jpg").get_url(session['usr'])
+
+        filePath = 'profilepic/' + session['usrId']
+        profilePicture = storage.child(filePath).get_url(session['usrId'])
+        try:
+            response = urllib.request.urlopen(url)
+        except:
+            url = storage.child("profilepic/default.jpg").get_url(session['usr'])
+        
+        return render_template('otherProfile.html', **data, user = user, skills = sorted_skills, interests = sorted_interests, url = url, profilePicture = profilePicture)
     
-    return render_template('otherProfile.html', **data, user = user, skills = sorted_skills, interests = sorted_interests, url = url, profilePicture = profilePicture)
+    except KeyError:
+        return redirect(url_for('login'))
+
 
 # Upload/change profile picture
 @app.route('/updatePhoto', methods=['GET', 'POST'])
@@ -213,6 +242,13 @@ def updatePhoto():
         filePath = "profilepic/" + session['usrId']
         storage.child(filePath).put(file, session['usr'])
     return redirect(url_for('profile'))
+
+# Sign out
+@app.route('/signOut')
+def signOut():
+    session['usrId'] = None
+    session['usr'] = None
+    return redirect(url_for('home'))
 
 if __name__ == "__main__":
     app.run(debug=True)
