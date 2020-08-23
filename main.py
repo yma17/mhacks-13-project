@@ -16,6 +16,13 @@ config = {
   "serviceAccount": "key.json"
 }
 
+# list of skills that can be added
+SKILLS = ['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing', 
+'Knitting', 'Photoshop', 'Photography', 'Singing', 'Gardening', 
+'Meditation', 'Video Editing', 'Drawing', 'Painting', 'Reading', 
+'English', 'Spanish', 'Chinese', 'French','German', 'Japanese', 
+'Korean', 'Hindu', 'Arabic', 'Malay', 'Italian', 'Portuguese']
+
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
@@ -112,8 +119,23 @@ def chat_list():
         # first room is None for some reason
         # all_rooms.pop(0)
         rooms = list(filter(in_room, all_rooms))
+
+        # get profile picture of self
+        filePath = 'profilepic/' + session['usrId']
+        url = storage.child(filePath).get_url(session['usrId'])
+        try:
+            response = urllib.request.urlopen(url)
+        except:
+            url = storage.child("profilepic/default.jpg").get_url(session['usr'])
+
         # Todo: replace current_user id // NOT DONE YET
-        return render_template('chat_list.html', rooms=rooms, current_user=session['usrId'])
+        data = {'user': db.child("users").child(session['usrId']).get().val(),
+                'rooms': rooms,
+                'current_user' :session['usrId'],
+                'url': url
+                }
+
+        return render_template('chat_list.html', **data)
     except KeyError:
         return redirect(url_for('login'))
 
@@ -146,6 +168,15 @@ def chat(room_id):
 
         # make sure to retrieve new messages
         messages = db.child(f"rooms/{room_id}/messages").get().val()
+
+        # get profile picture of self
+        filePath = 'profilepic/' + session['usrId']
+        url = storage.child(filePath).get_url(session['usrId'])
+        try:
+            response = urllib.request.urlopen(url)
+        except:
+            url = storage.child("profilepic/default.jpg").get_url(session['usr'])
+
         return render_template('chat.html', messages=messages, room_id=room_id, users=users, current_user=session['usrId'], chat_name=chat_name)
     
     except KeyError:
@@ -286,7 +317,9 @@ def register():
         except:
             message = "Unable to register. Please try again"
             return render_template('register.html')
-    return render_template('register.html', message=message)
+    data = {'allSkills': SKILLS,
+            'message': message}
+    return render_template('register.html', **data)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -304,15 +337,6 @@ def profile():
             # update profile
             user = db.child("users").child(session['usrId']).child("Skills").set(skills)
             user = db.child("users").child(session['usrId']).child("Interests").set(interests)
-        
-
-        # list of skills that can be added
-        skills = ['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing', 
-        'Knitting', 'Photoshop', 'Photography', 'Singing', 'Gardening', 
-        'Meditation', 'Video Editing', 'Drawing', 'Painting', 'Reading', 
-        'English', 'Spanish', 'Chinese', 'French','German', 'Japanese', 
-        'Korean', 'Hindu', 'Arabic', 'Malay', 'Italian', 'Portuguese']
-
 
         # query to get correct user based on userID from session
         user = db.child("users").child(session['usrId']).get()
@@ -320,7 +344,7 @@ def profile():
 
         # get profile picture of self
         filePath = 'profilepic/' + session['usrId']
-        profilePicture = storage.child(filePath).get_url(session['usrId'])
+        url = storage.child(filePath).get_url(session['usrId'])
         try:
             response = urllib.request.urlopen(url)
         except:
@@ -328,7 +352,7 @@ def profile():
 
         data = {'user': user.val(),
                 'email': auth.get_account_info(session['usr'])['users'][0]['email'],
-                'allSkills' : skills,
+                'allSkills' : SKILLS,
                 'picsrc': storage.child(filePath).get_url(session['usr']),
                 'url': url}
         return render_template('profile.html', **data)
