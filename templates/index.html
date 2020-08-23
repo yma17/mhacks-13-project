@@ -124,7 +124,7 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow" role="presentation">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{users[uid]["Name"]}}</span><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar1.jpeg"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{users[uid]["Name"]}}</span><img class="border rounded-circle img-profile" src="{{profilePicture}}"></a>
                                     <div
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="/profile"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
@@ -146,7 +146,7 @@
                             <div class="card shadow border-left-primary py-2">
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
-                                        <div class="col"><img class="border rounded-circle img-profile" src="{{url}}" width="62px" height="62px"></div>
+                                        <div class="col"><img class="border rounded-circle img-profile" src="{{pictures[key]}}" width="62px" height="62px"></div>
                                         <div class="col mr-2">
                                             
                                             <div class="text-dark font-weight-bold h5 mb-0"><span>{{users[key]["Name"]}}</span></div>
@@ -173,7 +173,7 @@
                         <div class="card shadow border-left-primary py-2">
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
-                                    <div class="col"><img class="border rounded-circle img-profile" src="{{url}}" width="62px" height="62px"></div>
+                                    <div class="col"><img class="border rounded-circle img-profile" src="{{pictures[key]}}" width="62px" height="62px"></div>
                                     <div class="col mr-2">
                                         {% for skill in users[key]["Skills"]%}
                                         <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>{{skill}}: {{users[key]["Skills"][skill]}}</span></div>
