@@ -5,6 +5,7 @@ import numpy as np
 import csv
 
 tf.disable_v2_behavior()
+tf.enable_resource_variables()
 
 
 firebase = firebase.FirebaseApplication("https://mhacks-13-project.firebaseio.com/")
@@ -33,6 +34,7 @@ l_t_matrix = pd.DataFrame(0.0, index=np.arange(num_users), columns=np.arange(num
 max_val = 0.0
 # non_zero = 0
 
+
 for i in range(len(uid_list)):
 	for j in range(len(uid_list)):
 		learner_info = result[uid_list[i]]
@@ -53,6 +55,10 @@ for i in range(len(uid_list)):
 
 if max_val != 0.0:
 	l_t_matrix = l_t_matrix / max_val  # normalize
+l_t_matrix = l_t_matrix.astype("float32")
+
+with open('max.txt', 'w') as max_file:
+	max_file.write(str(max_val))
 
 #print(l_t_matrix)
 #print(max_val)
@@ -65,20 +71,20 @@ num_input = num_users
 num_hidden_1 = 10
 num_hidden_2 = 5
 
-X = tf.placeholder(tf.float64, [None, num_input])
+X = tf.placeholder(tf.float32, [None, num_input], name="myInput")
 
 weights = {
-    'encoder_h1': tf.Variable(tf.random_normal([num_input, num_hidden_1], dtype=tf.float64)),
-    'encoder_h2': tf.Variable(tf.random_normal([num_hidden_1, num_hidden_2], dtype=tf.float64)),
-    'decoder_h1': tf.Variable(tf.random_normal([num_hidden_2, num_hidden_1], dtype=tf.float64)),
-    'decoder_h2': tf.Variable(tf.random_normal([num_hidden_1, num_input], dtype=tf.float64)),
+    'encoder_h1': tf.Variable(tf.random_normal([num_input, num_hidden_1], dtype=tf.float32)),
+    'encoder_h2': tf.Variable(tf.random_normal([num_hidden_1, num_hidden_2], dtype=tf.float32)),
+    'decoder_h1': tf.Variable(tf.random_normal([num_hidden_2, num_hidden_1], dtype=tf.float32)),
+    'decoder_h2': tf.Variable(tf.random_normal([num_hidden_1, num_input], dtype=tf.float32)),
 }
 
 biases = {
-    'encoder_b1': tf.Variable(tf.random_normal([num_hidden_1], dtype=tf.float64)),
-    'encoder_b2': tf.Variable(tf.random_normal([num_hidden_2], dtype=tf.float64)),
-    'decoder_b1': tf.Variable(tf.random_normal([num_hidden_1], dtype=tf.float64)),
-    'decoder_b2': tf.Variable(tf.random_normal([num_input], dtype=tf.float64)),
+    'encoder_b1': tf.Variable(tf.random_normal([num_hidden_1], dtype=tf.float32)),
+    'encoder_b2': tf.Variable(tf.random_normal([num_hidden_2], dtype=tf.float32)),
+    'decoder_b1': tf.Variable(tf.random_normal([num_hidden_1], dtype=tf.float32)),
+    'decoder_b2': tf.Variable(tf.random_normal([num_input], dtype=tf.float32)),
 }
 
 
@@ -133,8 +139,9 @@ with tf.Session() as session:
 	l_t_matrix = np.concatenate(l_t_matrix, axis=0)
 
 	preds = session.run(decoder_op, feed_dict={X: l_t_matrix})
+	preds_copy = tf.identity(preds, name="myOutput")
+
+	tf.saved_model.simple_save(session, 'model', inputs={"myInput": X}, outputs={"myOutput":preds_copy})
 
 	preds = pd.DataFrame(preds)
 	preds.to_csv('lt_matrix.csv', index=False, header=False)
-
-	simple_save(session, 'model', inputs={"a":a}, outputs={"b":b})
