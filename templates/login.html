@@ -1,78 +1,61 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <title>Login - Exchanger</title>
-    <link
-      rel="stylesheet"
-      href="/static/assets/bootstrap/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-    />
-    <link
-      rel="stylesheet"
-      href="/static/assets/fonts/fontawesome-all.min.css"
-    />
-    <link rel="stylesheet" href="/static/assets/fonts/ionicons.min.css" />
-  </head>
-
-  <body class="bg-gradient-primary">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-          <div class="card my-5">
-            <div class="p-5">
-              <div class="text-center">
-                <h4 class="text-dark mb-4">Welcome Back!</h4>
+{% extends "base.html" %} {% block title %}Login - Ciao!{% endblock %} {% block
+head %} {{ super() }}
+<style type="text/css"></style>
+{% endblock %} {% block content %}
+<body class="bg-gradient-primary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+        <div class="card my-5">
+          <div class="p-5">
+            <div class="text-center">
+              <div class="sidebar-brand-icon rotate-n-15">
+                <img src="/static/assets/img/logo4.png" />
               </div>
-              <form class="user" action="/login" method="post">
-                <div class="form-group">
-                  <input
-                    class="form-control form-control-user"
-                    type="email"
-                    id="exampleInputEmail"
-                    aria-describedby="emailHelp"
-                    placeholder="Enter Email Address..."
-                    name="email"
-                  />
-                </div>
-                <div class="form-group">
-                  <input
-                    class="form-control form-control-user"
-                    type="password"
-                    id="exampleInputPassword"
-                    placeholder="Password"
-                    name="password"
-                  />
-                </div>
-                {{message}}
-                <button
-                  class="btn btn-primary btn-block text-white btn-user"
-                  type="submit"
-                >
-                  Login
-                </button>
-                <hr />
-              </form>
-              <div class="text-center">
-                <a class="small" href="/register">Create an Account!</a>
+              <h4 class="text-dark mb-4">Welcome Back!</h4>
+            </div>
+            <form class="user" action="/login" method="post">
+              <div class="form-group">
+                <input
+                  class="form-control form-control-user"
+                  type="email"
+                  id="exampleInputEmail"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Email Address..."
+                  name="email"
+                />
               </div>
+              <div class="form-group">
+                <input
+                  class="form-control form-control-user"
+                  type="password"
+                  id="exampleInputPassword"
+                  placeholder="Password"
+                  name="password"
+                />
+              </div>
+              {{message}}
+              <button
+                class="btn btn-primary btn-block text-white btn-user"
+                type="submit"
+              >
+                Login
+              </button>
+              <hr />
+            </form>
+            <div class="text-center">
+              <a class="small" href="/register">Create an Account!</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/chart.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
-    <script src="assets/js/theme.js"></script>
-  </body>
-</html>
+  </div>
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="assets/js/chart.min.js"></script>
+  <script src="assets/js/bs-init.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="assets/js/theme.js"></script>
+</body>
+{% endblock %}

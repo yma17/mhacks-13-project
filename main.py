@@ -4,6 +4,7 @@ import time
 import pyrebase
 from flask import Flask, render_template, session, request, redirect, url_for
 from urllib.parse import urlparse
+from random import randint
 import urllib.request
 import operator
 
@@ -202,10 +203,13 @@ def index():
         if response.code not in range(200, 209):
             url = '/static/assets/img/default.jpg'
 
+        colors = ['primary', 'success', 'warning', 'danger', 'warning']
+
         data = {'users': db.child("users").get().val(),
                 'uid': session['usrId'],
                 'url': url,
-                'teachers': sorted_teachers}
+                'teachers': sorted_teachers, 
+                'colors': colors}
 
         if request.method == "POST": 
             other_user = request.form['userId']

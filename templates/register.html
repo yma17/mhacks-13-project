@@ -1,134 +1,115 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <title>Register - Exchanger</title>
-    <link
-      rel="stylesheet"
-      href="/static/assets/bootstrap/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-    />
-    <link
-      rel="stylesheet"
-      href="/static/assets/fonts/fontawesome-all.min.css"
-    />
-    <link rel="stylesheet" href="/static/assets/fonts/ionicons.min.css" />
-  </head>
-
-  <body class="bg-gradient-primary">
-    <div class="container">
+{% extends "base.html" %} {% block title %}Register - Ciao!{% endblock %} {%
+block head %} {{ super() }}
+<style type="text/css"></style>
+{% endblock %} {% block content %}
+<body class="bg-gradient-primary">
+  <div class="container">
+    <div
+      class="row d-md-flex d-lg-flex d-xl-flex justify-content-md-center justify-content-lg-center justify-content-xl-center"
+    >
       <div
-        class="row d-md-flex d-lg-flex d-xl-flex justify-content-md-center justify-content-lg-center justify-content-xl-center"
+        class="col-auto col-sm-12 col-md-6 col-lg-6 col-xl-6 d-lg-flex justify-content-lg-center my-5"
       >
-        <div
-          class="col-auto col-sm-12 col-md-6 col-lg-6 col-xl-6 d-lg-flex justify-content-lg-center my-5"
-        >
-          <div class="card">
-            <div class="p-5">
-              <div class="text-center">
-                <h4 class="text-dark mb-4">Create an Account!</h4>
+        <div class="card">
+          <div class="p-5">
+            <div class="text-center">
+              <div class="sidebar-brand-icon rotate-n-15">
+                <img src="/static/assets/img/logo4.png" />
               </div>
-              <form class="user" action="/register" method="post">
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input
-                      class="form-control form-control-user"
-                      type="text"
-                      id="exampleFirstName"
-                      placeholder="Username"
-                      name="username"
-                      required=""
-                    />
-                  </div>
-                  <div class="col-sm-6">
-                    <input
-                      class="form-control form-control-user"
-                      type="text"
-                      id="exampleFirstName"
-                      placeholder="Email Address"
-                      name="email"
-                      required=""
-                    />
-                  </div>
+              <h4 class="text-dark mb-4">Create an Account!</h4>
+            </div>
+            <form class="user" action="/register" method="post">
+              <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  <input
+                    class="form-control form-control-user"
+                    type="text"
+                    id="exampleFirstName"
+                    placeholder="Username"
+                    name="username"
+                    required=""
+                  />
                 </div>
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input
-                      class="form-control form-control-user"
-                      type="password"
-                      id="examplePasswordInput"
-                      placeholder="Password"
-                      name="password"
-                      required=""
-                    />
-                  </div>
-                  <div class="col-sm-6">
-                    <input
-                      class="form-control form-control-user"
-                      type="password"
-                      id="exampleRepeatPasswordInput"
-                      placeholder="Repeat Password"
-                      name="password_repeat"
-                      required=""
-                    />
-                  </div>
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <label
-                      for="skill"
-                      style="margin-top: 0.5rem; margin-bottom: 0;"
-                      >Skill</label
-                    >
-                    <select class="form-control" name="skill" required>
-                      {% for skill in allSkills %}
-                      <option value="{{skill}}">{{skill}}</option>
-                      {% endfor %}</select
-                    >
-                  </div>
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <label
-                      for="interest"
-                      style="margin-top: 0.5rem; margin-bottom: 0;"
-                    >
-                      Interest</label
-                    >
-                    <select class="form-control" name="interest" required>
-                      {% for skill in allSkills %}
-                      <option value="{{skill}}">{{skill}}</option>
-                      {% endfor %}</select
-                    >
-                  </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control form-control-user"
+                    type="text"
+                    id="exampleFirstName"
+                    placeholder="Email Address"
+                    name="email"
+                    required=""
+                  />
                 </div>
-                {{message}}
-                <button
-                  class="btn btn-primary btn-block text-white btn-user"
-                  type="submit"
-                >
-                  Register Account
-                </button>
-                <hr />
-              </form>
-              <div class="text-center">
-                <a class="small" href="/login"
-                  >Already have an account? Login!</a
-                >
               </div>
+              <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  <input
+                    class="form-control form-control-user"
+                    type="password"
+                    id="examplePasswordInput"
+                    placeholder="Password"
+                    name="password"
+                    required=""
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control form-control-user"
+                    type="password"
+                    id="exampleRepeatPasswordInput"
+                    placeholder="Repeat Password"
+                    name="password_repeat"
+                    required=""
+                  />
+                </div>
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  <label
+                    for="skill"
+                    style="margin-top: 0.5rem; margin-bottom: 0;"
+                    >Skill</label
+                  >
+                  <select class="form-control" name="skill" required>
+                    {% for skill in allSkills %}
+                    <option value="{{skill}}">{{skill}}</option>
+                    {% endfor %}</select
+                  >
+                </div>
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  <label
+                    for="interest"
+                    style="margin-top: 0.5rem; margin-bottom: 0;"
+                  >
+                    Interest</label
+                  >
+                  <select class="form-control" name="interest" required>
+                    {% for skill in allSkills %}
+                    <option value="{{skill}}">{{skill}}</option>
+                    {% endfor %}</select
+                  >
+                </div>
+              </div>
+              {{message}}
+              <button
+                class="btn btn-primary btn-block text-white btn-user"
+                type="submit"
+              >
+                Register Account
+              </button>
+              <hr />
+            </form>
+            <div class="text-center">
+              <a class="small" href="/login">Already have an account? Login!</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/chart.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
-    <script src="assets/js/theme.js"></script>
-  </body>
-</html>
+  </div>
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="assets/js/chart.min.js"></script>
+  <script src="assets/js/bs-init.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="assets/js/theme.js"></script>
+</body>
+{% endblock %}
