@@ -328,10 +328,11 @@
                       href="#"
                       ><span class="d-none d-lg-inline mr-2 text-gray-600 small"
                         >{{users[uid]["Name"]}}</span
-                      ><img
-                        class="border rounded-circle img-profile"
-                        src="{{profilePicture}}"
-                    /></a>
+                      ><img class="border rounded-circle img-profile" <<<<<<<
+                      HEAD src="{{profilePicture}}" =======
+                      src="/static/assets/img/avatars/avatar1.jpeg" >>>>>>>
+                      ac3b37e387c358231a023425474913be3fa1389c /></a
+                    >
                     <div
                       class="dropdown-menu shadow dropdown-menu-right animated--grow-in"
                       role="menu"
@@ -388,7 +389,7 @@
                       <div class="col">
                         <img
                           class="border rounded-circle img-profile"
-                          src="{{profilePicture | replace(uid, key)}}"
+                          src="{{url}}"
                           width="62px"
                           height="62px"
                         />
@@ -432,7 +433,7 @@
                       <div class="col">
                         <img
                           class="border rounded-circle img-profile"
-                          src="{{profilePicture | replace(uid, key)}}"
+                          src="{{url}}"
                           width="62px"
                           height="62px"
                         />
