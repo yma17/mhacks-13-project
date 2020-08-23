@@ -144,63 +144,48 @@
                         </div>
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="text-primary font-weight-bold m-0">Projects</h6>
+                                <h6 class="text-primary font-weight-bold m-0">Pay me</h6>
+                            </div>
+                            <div class="card-body text-center shadow"><button class="btn btn-primary btn-block text-white btn-user" onclick="pay()" type="submit">1 currency</button>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="text-primary font-weight-bold m-0">Interests</h6>
                             </div>
                             <div class="card-body">
-                                <h4 class="small font-weight-bold">Server migration<span class="float-right">20%</span></h4>
-                                <div class="progress progress-sm mb-3">
-                                    <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="sr-only">20%</span></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Sales tracking<span class="float-right">40%</span></h4>
-                                <div class="progress progress-sm mb-3">
-                                    <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"><span class="sr-only">40%</span></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Customer Database<span class="float-right">60%</span></h4>
-                                <div class="progress progress-sm mb-3">
-                                    <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"><span class="sr-only">60%</span></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Payout Details<span class="float-right">80%</span></h4>
-                                <div class="progress progress-sm mb-3">
-                                    <div class="progress-bar bg-info" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"><span class="sr-only">80%</span></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Account setup<span class="float-right">Complete!</span></h4>
-                                <div class="progress progress-sm mb-3">
-                                    <div class="progress-bar bg-success" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"><span class="sr-only">100%</span></div>
-                                </div>
+                                {% for interest in interests %}
+                                    {% if interests[interest] == 0 %}
+                                    <h4 class="small font-weight-bold">{{interest}}<span class="float-right">Novice</span></h4>
+                                    <div class="progress progress-sm mb-3">
+                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">Novice</span></div>
+                                    </div>
+                                    {% elif interests[interest] == 1 %}
+                                    <h4 class="small font-weight-bold">{{interest}}<span class="float-right">Beginner</span></h4>
+                                    <div class="progress progress-sm mb-3">
+                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 33%;"><span class="sr-only">Beginner</span></div>
+                                    </div>
+                                    {% elif interests[interest] == 2 %}
+                                    <h4 class="small font-weight-bold">{{interest}}<span class="float-right">Intermediate</span></h4>
+                                    <div class="progress progress-sm mb-3">
+                                        <div class="progress-bar bg-warning" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 67%;"><span class="sr-only">Intermediate</span></div>
+                                    </div>
+                                    {% elif interests[interest] == 3 %}
+                                    <h4 class="small font-weight-bold">{{interest}}<span class="float-right">Advanced</span></h4>
+                                    <div class="progress progress-sm mb-3">
+                                        <div class="progress-bar bg-success" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"><span class="sr-only">Advanced</span></div>
+                                    </div>
+                                    {% else %}
+                                    <h4 class="small font-weight-bold">{{interest}}<span class="float-right">N/A</span></h4>
+                                    <div class="progress progress-sm mb-3">
+                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">N/A</span></div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-8">
-                        <div class="row mb-3 d-none">
-                            <div class="col">
-                                <div class="card text-white bg-primary shadow">
-                                    <div class="card-body">
-                                        <div class="row mb-2">
-                                            <div class="col">
-                                                <p class="m-0">Peformance</p>
-                                                <p class="m-0"><strong>65.2%</strong></p>
-                                            </div>
-                                            <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
-                                        </div>
-                                        <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card text-white bg-success shadow">
-                                    <div class="card-body">
-                                        <div class="row mb-2">
-                                            <div class="col">
-                                                <p class="m-0">Peformance</p>
-                                                <p class="m-0"><strong>65.2%</strong></p>
-                                            </div>
-                                            <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
-                                        </div>
-                                        <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col">
                                 <div class="card shadow mb-3">
@@ -211,62 +196,70 @@
                                         <form>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div><h5>Name: {{users["0g6DIZAxYbejOSQsn0U0FYcpl3I3"]}}</h5></div>
-                                                    <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="user.name" name="username"></div>
+                                                    <div><h5>UserName: {{user["Name"]}}</h5></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="email"><strong>Email Address</strong></label><input class="form-control" type="email" placeholder="user@example.com" name="email"></div>
+                                                    <div><h5>Email Address: </h5></div>
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" placeholder="John" name="first_name"></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" placeholder="Doe" name="last_name"></div>
                                                 </div>
                                             </div>
-                                            <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
                                         </form>
                                     </div>
                                 </div>
-                                <div class="card shadow">
+                                <div class="card shadow mb-3">
                                     <div class="card-header py-3">
-                                        <p class="text-primary m-0 font-weight-bold">Contact Settings</p>
+                                        <p class="text-primary m-0 font-weight-bold">About me</p>
                                     </div>
                                     <div class="card-body">
                                         <form>
-                                            <div class="form-group"><label for="address"><strong>Address</strong></label><input class="form-control" type="text" placeholder="Sunset Blvd, 38" name="address"></div>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="city"><strong>City</strong></label><input class="form-control" type="text" placeholder="Los Angeles" name="city"></div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="form-group"><label for="country"><strong>Country</strong></label><input class="form-control" type="text" placeholder="USA" name="country"></div>
+                                                    <p>I'm very passionate about learning and teaching! Connect with me :)</p>
                                                 </div>
                                             </div>
-                                            <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save&nbsp;Settings</button></div>
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card shadow mb-5">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 font-weight-bold">Forum Settings</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <form>
-                                    <div class="form-group"><label for="signature"><strong>Signature</strong><br></label><textarea class="form-control" rows="4" name="signature"></textarea></div>
-                                    <div class="form-group">
-                                        <div class="custom-control custom-switch"><input class="custom-control-input" type="checkbox" id="formCheck-1"><label class="custom-control-label" for="formCheck-1"><strong>Notify me about new replies</strong></label></div>
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="text-primary font-weight-bold m-0">Skills</h6>
                                     </div>
-                                    <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
-                                </form>
+                                    <div class="card-body">
+                                        {% for skill in skills %}
+                                            {% if skills[skill] == 0 %}
+                                            <h4 class="small font-weight-bold">{{skill}}<span class="float-right">Novice</span></h4>
+                                            <div class="progress progress-sm mb-3">
+                                                <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">Novice</span></div>
+                                            </div>
+                                            {% elif skills[skill] == 1 %}
+                                            <h4 class="small font-weight-bold">{{skill}}<span class="float-right">Beginner</span></h4>
+                                            <div class="progress progress-sm mb-3">
+                                                <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 33%;"><span class="sr-only">Beginner</span></div>
+                                            </div>
+                                            {% elif skills[skill] == 2 %}
+                                            <h4 class="small font-weight-bold">{{skill}}<span class="float-right">Intermediate</span></h4>
+                                            <div class="progress progress-sm mb-3">
+                                                <div class="progress-bar bg-warning" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 67%;"><span class="sr-only">Intermediate</span></div>
+                                            </div>
+                                            {% elif skills[skill] == 3 %}
+                                            <h4 class="small font-weight-bold">{{skill}}<span class="float-right">Advanced</span></h4>
+                                            <div class="progress progress-sm mb-3">
+                                                <div class="progress-bar bg-success" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"><span class="sr-only">Advanced</span></div>
+                                            </div>
+                                            {% else %}
+                                            <h4 class="small font-weight-bold">{{skill}}<span class="float-right">N/A</span></h4>
+                                            <div class="progress progress-sm mb-3">
+                                                <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">N/A</span></div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -283,4 +276,9 @@
     <script src="/static/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="/static/assets/js/theme.js"></script>
+    <script>
+        function pay() {
+            // subtract from self, add to other by 1 currency
+        }
+    </script>
 </body>
