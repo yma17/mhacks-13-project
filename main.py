@@ -28,6 +28,18 @@ def index():
     except KeyError:
         return render_template('login.html')
 
+@app.route("/home")
+def home():
+    return render_template('home.html')
+
+@app.route("/login")
+def login():
+    return render_template('login.html')
+
+@app.route("/register")
+def register():
+    return render_template('register.html')
+
 @app.route("/index")
 def index2():
     # check if session exists, if not redirect user to login page
