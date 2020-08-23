@@ -46,12 +46,32 @@ def readRecFromCsv():
             # count = count + 1
 
 
-    # get specific index of current user, to get row of predictions
-    try:
+    if session['usrId'] in id_list:
+        # get specific index of current user, to get row of predictions
         idx = id_list.index(session['usrId'])
-    except:
-        # can't find user in list, default to first entry
-        idx = 0
+    else:
+        try:
+            # get row of nearest neighbor from shared interests
+            highest_sim = 0
+
+            users = db.child("users").get()
+            for uid, user_info in users.items():
+                if "Interests" in user_info:
+                    this_sim = 0
+                    for interest, level in user_info["Interests"].items():
+                        if interest in user_info[session['usrId']]["Interests"]:
+                            level_diff = abs(level - user_info[session['usrId']]["Interests"][interest])
+                            if level_diff == 0:
+                                this_sim += 5
+                            elif level_diff == 1:
+                                this_sim += 3
+                            elif level_diff == 2:
+                                this_sim += 1
+                    if this_sim > highest_sim:
+                        highest_sim = this_sim
+                        idx = uid
+        except:
+            idx = 0
 
     with open('lt_matrix.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
@@ -81,7 +101,10 @@ def index():
         # receive the list of uids then sort (excludes current user)
         uidDict = readRecFromCsv()
         #sorted_teachers = {k: v for k, v in sorted(uidDict.items(), key=lambda x: x[1])}
-        sorted_teachers = dict(sorted(uidDict.items(), key=operator.itemgetter(1),reverse=True))
+        sorted_teachers = sorted(uidDict.items(), key=operator.itemgetter(1),reverse=True)
+        if len(sorted_teachers) > 50:
+            sorted_teachers = sorted_teachers[:50]
+        sorted_teachers = dict(sorted_teachers)
 
         # attempt to get photo for current user, if not found revert to default
         filePath = "profilepic/" + session['usrId']
