@@ -27,6 +27,29 @@ SKILLS = ['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing',
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
+def readRecFromCsv():
+    # read all user ids first
+    with open('uid.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        id_list = []
+        for i in next(csv_reader):
+            id_list.append(i)
+
+    # get specific index of current user, to get row of predictions
+    idx = id_list.index("zxcZAXnIA0dDNYQKvSx81AcTXIg2")
+
+    with open('lt_matrix.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        pred = {}
+        selectedRow = [row for i, row in enumerate(csv_reader) if i == idx]
+        for i, val in enumerate(selectedRow[0]):
+            # exclude current user
+            if (i == idx):
+                continue
+            pred[id_list[i]] = val
+        
+    return pred
+
 @app.route("/")
 def home():
     return render_template('home.html')
@@ -36,8 +59,12 @@ def index():
     # check if session exists, if not redirect user to login page
     try:
         print(session['usr'])
+
+        # get dictionary of predictions (excluding current user)
+        pred = readRecFromCsv()
         data = {'users': db.child("users").get().val(),
-                'uid': session['usrId']}
+                'uid': session['usrId'],
+                'pred': pred}
         return render_template('index.html', **data)
     except KeyError:
         return redirect(url_for('login'))
@@ -145,3 +172,4 @@ def updatePhoto():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
