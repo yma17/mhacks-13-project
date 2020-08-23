@@ -143,27 +143,27 @@
                     {% for key in users%}
                         {% if not users[key]["Skills"] %}
                         <div class="col-md-6 col-xl-3 mb-4">
-                            <div class="card shadow border-left-success py-2">
+                            <div class="card shadow border-left-primary py-2">
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
-                                        <div class="col"><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar4.jpeg"></div>
+                                        <div class="col"><img class="border rounded-circle img-profile" src="{{url}}" width="62px" height="62px"></div>
                                         <div class="col mr-2">
-                                            {% for skill in users[key]["Skills"]%}
-                                            <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>{{skill}}: {{users[key]["Skills"][skill]}}</span></div>
-                                            {% endfor %}
+                                            
                                             <div class="text-dark font-weight-bold h5 mb-0"><span>{{users[key]["Name"]}}</span></div>
                                         </div>
                                         
                                     </div>
                                     
                                     <div class="col-auto">
-                                        <form action="/otherProfile" method="GET"><button class="btn btn-primary" type="button>">
-                                            <input id="id" name="userId" type="hidden" value="{{key}}"> Profile
-                                        </button>
-                                        </form>
+                                        <br>
+                                        <div class="row">
+                                            <form action="/otherProfile" method="GET"><button class="btn btn-primary" type="button>">
+                                                <input id="id" name="userId" type="hidden" value="{{key}}"> Profile
+                                            </button>
+                                            </form>
+                                            <div class="col-auto"><button class="btn btn-primary" type="button">Chat</button></div>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="col-auto"><button class="btn btn-primary" type="button">Chat</button></div>
                                 </div>
                             </div>
     
@@ -173,7 +173,7 @@
                         <div class="card shadow border-left-primary py-2">
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
-                                    <div class="col"><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar4.jpeg"></div>
+                                    <div class="col"><img class="border rounded-circle img-profile" src="{{url}}" width="62px" height="62px"></div>
                                     <div class="col mr-2">
                                         {% for skill in users[key]["Skills"]%}
                                         <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>{{skill}}: {{users[key]["Skills"][skill]}}</span></div>
@@ -183,80 +183,37 @@
                                     
                                 </div>
                                 <div class="col-auto">
-                                    <form action="/otherProfile" method="GET"><button class="btn btn-primary" type="button>">
-                                        <input id="id" name="userId" type="hidden" value="{{key}}"> Profile
-                                    </button>
-                                    </form>
+                                    <br>
+                                    <div class="row">
+                                        <form action="/otherProfile" method="GET"><button class="btn btn-primary" type="button>">
+                                            <input id="id" name="userId" type="hidden" value="{{key}}"> Profile
+                                        </button>
+                                        </form>
+                                        <div class="col-auto"><button class="btn btn-primary" type="button">Chat</button></div>
+                                    </div>
                                 </div>
-                                <div class="col-auto"><button class="btn btn-primary" type="button">Exchange</button></div>
                             </div>
                         </div>
 
                     </div>
                     {% endif %}
                     {% endfor %}
-                    <div class="col-md-6 col-xl-3 mb-4">
-                        <div class="card shadow border-left-primary py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col"><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar4.jpeg"></div>
-                                    <div class="col mr-2">
-                                        <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Coding</span></div>
-                                        <div class="text-dark font-weight-bold h5 mb-0" id="1"><span>{{data}}</span></div>
-                                    </div>
-                                    <div class="col-auto"><button class="btn btn-primary" type="button">Exchange</button></div>
-                                </div><span>I can teach beginner Java and Python.</span></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-3 mb-4">
-                        <div class="card shadow border-left-success py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col"><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar3.jpeg"></div>
-                                    <div class="col mr-2">
-                                        <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>coding</span></div>
-                                        <div class="text-dark font-weight-bold h5 mb-0"><span>Steve</span></div>
-                                    </div>
-                                    <div class="col-auto"><button class="btn btn-primary" type="button">Exchange</button></div>
-                                </div><span>I can teach beginner C++.</span><span>I can teach beginner C++.</span></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-3 mb-4">
-                        <div class="card shadow border-left-info py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col"><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar5.jpeg"></div>
-                                    <div class="col mr-2">
-                                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>coding</span></div>
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col-auto">
-                                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>Mike</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto"><button class="btn btn-primary" type="button">Exchange</button></div>
-                                </div><span>I can teach beginner C++.</span></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-3 mb-4">
-                        <div class="card shadow border-left-warning py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col"><img class="border rounded-circle img-profile" src="/static/assets/img/avatars/avatar2.jpeg"></div>
-                                    <div class="col mr-2">
-                                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>cooking</span></div>
-                                        <div class="text-dark font-weight-bold h5 mb-0"><span>Karen</span></div>
-                                    </div>
-                                    <div class="col-auto"><button class="btn btn-primary" type="button">Exchange</button></div>
-                                </div><span>I can teach Asian cuisines.</span></div>
-                        </div>
-                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
+        <footer class="bg-white sticky-footer">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright"><span>Copyright © Brand 2020</span></div>
+            </div>
+        </footer>
+    </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a></div>
+    <script src="/static/assets/js/jquery.min.js"></script>
+    <script src="/static/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="/static/assets/js/theme.js"></script>
+    <script>
+        function pay() {
+            // subtract from self, add to other by 1 currency
+        }
+    </script>
+</body>
