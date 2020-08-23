@@ -1,5 +1,7 @@
 import pyrebase
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+import urllib.parse as urlparse
+from urllib.parse import parse_qs
 
 config = {
   "apiKey": "AIzaSyAQk0A5csVTIUIEfvdXXiXaelEG3OWes9U",
@@ -41,7 +43,14 @@ def about():
 
 @app.route('/otherProfile/')
 def otherProfile():
-    return render_template('otherProfile.html', users = db.child("users").get().val())
+    userId = request.args.get('userId')
+    users = db.child("users").get().val()
+    user = users[userId]
+    skills = users[userId]["Skills"]
+    interests = users[userId]["Interests"]
+    sorted_interests = {k: v for k, v in sorted(interests.items(), key=lambda x: x[1])}
+    sorted_skills = {k: v for k, v in sorted(skills.items(), key=lambda x: x[1])}
+    return render_template('otherProfile.html', user = user, skills = sorted_skills, interests = sorted_interests)
 
 if __name__ == "__main__":
     app.run()
