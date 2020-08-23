@@ -80,16 +80,11 @@ def register():
             return render_template('register.html')
     return render_template('register.html', message=message)
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/profile')
 def profile():
     # check if session exists, if not redirect user to login page
     try:
         print(session['usr'])
-
-        # update profile form submission
-        if request.method == "POST":
-            return "HI"
-
         # list of skills that can be added
         skills = ['Cooking', 'Coding', 'Baking', 'Writing', 'Sewing', 
         'Knitting', 'Photoshop', 'Photography', 'Singing', 'Gardening', 
@@ -111,7 +106,25 @@ def profile():
         return render_template('profile.html', **data)
     except KeyError:
         return render_template('login.html')
-    
+
+#Update profile (interest and skills)
+@app.route('/updateInterest', methods=['GET', 'POST'])
+def updateInterest():
+    if request.method != 'POST':
+        interest = request.form['interest']
+        interestLevel = request.form['interestLevel']
+        data = {interest: interestLevel}
+        db.child("users").child(session['usrId']).child("Interests").push(data)
+    return redirect(url_for('profile'))
+
+@app.route('/updateSkill', methods=['GET', 'POST'])
+def updateSkill():
+    if request.method != 'POST':
+        skill = request.form['skill']
+        skillLevel = request.form['skillLevel']
+        data = {skill: skillLevel}
+        db.child("users").child(session['usrId']).child("Skills").push(data)
+    return redirect(url_for('profile'))
 
 if __name__ == "__main__":
     app.run(debug=True)
