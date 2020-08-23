@@ -26,8 +26,8 @@ app.secret_key = os.urandom(24)
 
 def readRecFromCsv():
     # download uid.csv and lt_matrix.csv from firebase storage
-    storage.child("uid.csv").download("uid.csv")
-    storage.child("lt_matrix.csv").download("lt_matrix.csv")
+    #storage.child("uid.csv").download("uid.csv")
+    #storage.child("lt_matrix.csv").download("lt_matrix.csv")
 
     # read all user ids first
     with open('uid.csv', 'r') as csv_file:
@@ -62,7 +62,7 @@ def readRecFromCsv():
             if (i == idx):
                 continue
             pred[id_list[i]] = float(val)
-        
+
     return pred
 
 @app.route("/")
@@ -210,7 +210,6 @@ def index():
                 room_id = 0
             return redirect(url_for('chat', room_id=room_id))
 
-
         return render_template('index.html', **data)
     except KeyError:
         return redirect(url_for('login'))
@@ -322,9 +321,9 @@ def otherProfile():
             return redirect(url_for('login'))
 
         userId = request.args.get('userId')
+        status = request.args.get('status')
         users = db.child("users").get().val()
-        data = {'users': db.child("users").get().val(),
-                    'uid': session['usrId']}
+        
         user = users[userId]
         skills = dict()
         interests = dict()
@@ -349,7 +348,17 @@ def otherProfile():
         except:
             url = storage.child("profilepic/default.jpg").get_url(session['usr'])
         
-        return render_template('otherProfile.html', **data, user = user, skills = sorted_skills, interests = sorted_interests, url = url, profilePicture = profilePicture)
+        data = {'users': db.child("users").get().val(),
+                'uid': session['usrId'],
+                'otheruid': userId,
+                'user': user,
+                'skills': sorted_skills,
+                'interests': sorted_interests, 
+                'url': url,
+                'profilePicture': profilePicture,
+                'status': status}
+
+        return render_template('otherProfile.html', **data)
     
     except KeyError:
         return redirect(url_for('login'))
@@ -370,6 +379,32 @@ def signOut():
     session['usrId'] = None
     session['usr'] = None
     return redirect(url_for('home'))
+
+# Pay currency from current user to other user
+@app.route('/payCurrency', methods=['GET', 'POST'])
+def payCurrency():
+    fromId = session['usrId']
+    toId = request.form['otherId']
+
+    try: 
+        # get database entries of both users
+        fromAmount = db.child("users").child(fromId).child("currency").get().val()
+        toAmount = db.child("users").child(toId).child("currency").get().val()
+
+        fromAmount = int(fromAmount) - 1
+        toAmount = int(toAmount) - 1
+
+        if fromAmount <= 0:
+            return redirect('/otherProfile/?userId=' + str(toId) + '&status=insufficient')
+
+        # update database entries of both users: from - 1, to + 1
+        db.child("users").child(fromId).child("currency").set(fromAmount)
+        db.child("users").child(fromId).child("currency").set(toAmount)
+
+        return redirect('/otherProfile/?userId=' + str(toId) + '&status=paid')
+
+    except:
+        return redirect('/otherProfile/?userId=' + str(toId) + '&status=failed')
 
 if __name__ == "__main__":
     app.run(debug=True)

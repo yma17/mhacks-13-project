@@ -467,9 +467,16 @@
                           </button>
                         </form>
                         <div class="col-auto">
-                          <button class="btn btn-primary" type="button">
-                            Chat
-                          </button>
+                          <form action="/index" method="POST">
+                            <input
+                              name="userId"
+                              type="hidden"
+                              value="{{key}}"
+                            />
+                            <button class="btn btn-primary" type="submit">
+                              Chat
+                            </button>
+                          </form>
                         </div>
                       </div>
                     </div>
